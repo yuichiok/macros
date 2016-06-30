@@ -1,0 +1,91 @@
+void nj()
+{
+//=========Macro generated from canvas: c1/c1
+//=========  (Tue Dec 29 15:20:51 2015) by ROOT version6.05/03
+   TCanvas *c1 = new TCanvas("c1", "c1",10,45,700,500);
+   c1->Range(9.749999,-96.99376,52.25,872.9438);
+   c1->SetFillColor(0);
+   c1->SetBorderMode(0);
+   c1->SetBorderSize(2);
+   c1->SetFrameBorderMode(0);
+   c1->SetFrameBorderMode(0);
+   
+   TH1F *htemp__3 = new TH1F("htemp__3","nj {nj>15}",34,14,48);
+   htemp__3->SetBinContent(3,739);
+   htemp__3->SetBinContent(4,721);
+   htemp__3->SetBinContent(5,671);
+   htemp__3->SetBinContent(6,689);
+   htemp__3->SetBinContent(7,613);
+   htemp__3->SetBinContent(8,578);
+   htemp__3->SetBinContent(9,602);
+   htemp__3->SetBinContent(10,571);
+   htemp__3->SetBinContent(11,530);
+   htemp__3->SetBinContent(12,539);
+   htemp__3->SetBinContent(13,512);
+   htemp__3->SetBinContent(14,443);
+   htemp__3->SetBinContent(15,408);
+   htemp__3->SetBinContent(16,371);
+   htemp__3->SetBinContent(17,287);
+   htemp__3->SetBinContent(18,273);
+   htemp__3->SetBinContent(19,268);
+   htemp__3->SetBinContent(20,199);
+   htemp__3->SetBinContent(21,161);
+   htemp__3->SetBinContent(22,139);
+   htemp__3->SetBinContent(23,96);
+   htemp__3->SetBinContent(24,78);
+   htemp__3->SetBinContent(25,63);
+   htemp__3->SetBinContent(26,29);
+   htemp__3->SetBinContent(27,28);
+   htemp__3->SetBinContent(28,16);
+   htemp__3->SetBinContent(29,12);
+   htemp__3->SetBinContent(30,5);
+   htemp__3->SetBinContent(31,4);
+   htemp__3->SetBinContent(32,3);
+   htemp__3->SetBinContent(33,2);
+   htemp__3->SetEntries(9650);
+   htemp__3->SetDirectory(0);
+   
+   TPaveStats *ptstats = new TPaveStats(0.78,0.775,0.98,0.935,"brNDC");
+   ptstats->SetName("stats");
+   ptstats->SetBorderSize(1);
+   ptstats->SetFillColor(0);
+   ptstats->SetTextAlign(12);
+   ptstats->SetTextFont(42);
+   TText *AText = ptstats->AddText("htemp");
+   AText->SetTextSize(0.0368);
+   AText = ptstats->AddText("Entries = 9650   ");
+   AText = ptstats->AddText("Mean  =  23.73");
+   AText = ptstats->AddText("Std Dev   =  5.766");
+   ptstats->SetOptStat(1111);
+   ptstats->SetOptFit(0);
+   ptstats->Draw();
+   htemp__3->GetListOfFunctions()->Add(ptstats);
+   ptstats->SetParent(htemp__3);
+   htemp__3->GetXaxis()->SetTitle("nj");
+   htemp__3->GetXaxis()->SetRange(1,100);
+   htemp__3->GetXaxis()->SetLabelFont(42);
+   htemp__3->GetXaxis()->SetLabelSize(0.035);
+   htemp__3->GetXaxis()->SetTitleSize(0.035);
+   htemp__3->GetXaxis()->SetTitleFont(42);
+   htemp__3->GetYaxis()->SetLabelFont(42);
+   htemp__3->GetYaxis()->SetLabelSize(0.035);
+   htemp__3->GetYaxis()->SetTitleSize(0.035);
+   htemp__3->GetYaxis()->SetTitleFont(42);
+   htemp__3->GetZaxis()->SetLabelFont(42);
+   htemp__3->GetZaxis()->SetLabelSize(0.035);
+   htemp__3->GetZaxis()->SetTitleSize(0.035);
+   htemp__3->GetZaxis()->SetTitleFont(42);
+   htemp__3->Draw("");
+   
+   TPaveText *pt = new TPaveText(0.4126361,0.9368947,0.5873639,0.995,"blNDC");
+   pt->SetName("title");
+   pt->SetBorderSize(0);
+   pt->SetFillColor(0);
+   pt->SetFillStyle(0);
+   pt->SetTextFont(42);
+   AText = pt->AddText("nj {nj>15}");
+   pt->Draw();
+   c1->Modified();
+   c1->cd();
+   c1->SetSelected(c1);
+}
