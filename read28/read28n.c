@@ -1,3 +1,5 @@
+int count();
+
 void read28n() {
     ifstream ina;
     ifstream inb;
@@ -77,7 +79,13 @@ void read28n() {
     tree->Branch("etajet",etajet,"etajet[nJet]/F");
     tree->Branch("phijet",phijet,"phijet[nJet]/F");
     
-    for(int iEvent=0; iEvent<10000;++iEvent)
+    int nline;
+    
+    nline = count();
+    
+    cout << "Event found = " << nline << endl;
+    
+    for(int iEvent=0; iEvent<nline;++iEvent)
     {
         inb >> pxb >> pyb >> pzb >> eb >> mb >> etab >> phib >> pxbbar >> pybbar >> pzbbar >> ebbar >> mbbar >> etabbar >> phibbar >> pxm >> pym >> pzm >> em >> mm >> etam >> phim >> pxmbar >> pymbar >> pzmbar >> embar >> mmbar >> etambar >> phimbar >> pxh >> pyh >> pzh >> eh >> mh >> etah >> phih >> pxz >> pyz >> pzz >> ez >> mz >> etaz >> phiz >> nJet;
         
@@ -95,6 +103,24 @@ void read28n() {
     f->Write();
     f->Close();delete f;
 }
+
+int count(){
+    
+    int number_of_lines = 0;
+    std::string line;
+    std::ifstream myfile("/Users/Yuichi/root/macros/mytext28/mytext28b.txt");
+    
+    while (std::getline(myfile, line))
+        ++number_of_lines;
+    
+    return number_of_lines;
+}
+
+
+
+
+
+
 
 
 

@@ -89,35 +89,45 @@ void read28m(){
     
     
     //Histogram
-    TH1F *higg          = new TH1F("hm","Higgs invariant mass distribution",100,0,300.);
-    TH1F *zboson        = new TH1F("zm","Z0 invariant mass distribution",100,0,300.);
-    TH1F *bpT           = new TH1F("bpT","b quark pT distribution",100,0,300.);
-    TH1F *mpT           = new TH1F("mupT","Muon pT distribution",100,0,300.);
-    TH1F *bEta          = new TH1F("bEta","b quark Eta distribution",100,-4.,4.);
-    TH1F *mEta          = new TH1F("muEta","Muon Eta distribution",100,-4.,4.);
-    TH1F *pTHhist       = new TH1F("pTH","Higgs boson pT distribution",100,0.,300.);
-    TH1F *pTZhist       = new TH1F("pTZ","Z boson pT distribution",100,0.,300.);
-    TH1F *dpTHZhist     = new TH1F("dpTHZ","dpT between H and Z",100,-200,200.);
-    TH2F *bpTy          = new TH2F("bphiy","b bbar pT vs. Jet #eta",100,-4.,4.,100,0.,300.);
-    TH1F *inv           = new TH1F("invm","Di-jet invariant mass distribution (after b bbar cut)",100,0.,250.);
-    TH1F *Ebhist        = new TH1F("Eb","Energy of b",100,0.,300.);
-    TH1F *Ejethist      = new TH1F("Ejet","Energy of jet",100,0.,300.);
-    TH1F *pTbhist       = new TH1F("pTjetb","pT comparison of b and jet",100,0,300.);
-    TH1F *pTjethist     = new TH1F("pTjet","pT cof jet",100,0,300.);
-    TH2F *jetphiy       = new TH2F("jetphiy","Jet #phi vs. Jet #eta",100,-4.,4.,100,-4.,4.);
-    TH2F *jetpTy        = new TH2F("jetpTy","pT vs #eta of jet and b",100,-7.,7.,100,0.,300.);
+    TH1F *higg              = new TH1F("hm","Higgs invariant mass distribution",100,0,300.);
+    TH1F *zboson            = new TH1F("zm","Z0 invariant mass distribution",100,0,300.);
+    
+    TH1F *pTbhist           = new TH1F("bpThist","b quark pT distribution",100,0,300.);
+    TH1F *pTbbarhist        = new TH1F("bbarpThist","bbar quark pT distribution",100,0,300.);
+    
+    TH1F *pTmhist           = new TH1F("mpThist","mu- pT distribution",100,0,300.);
+    TH1F *pTmbarhist        = new TH1F("mbarpThist","mu+ pT distribution",100,0,300.);
+    
+    TH1F *etabhist          = new TH1F("betahist","b quark #eta distribution",100,-4.,4.);
+    TH1F *etabbarhist       = new TH1F("bbaretahist","bbar quark #eta distribution",100,-4.,4.);
+    
+    TH1F *etamhist          = new TH1F("metahist","mu- #eta distribution",100,-4.,4.);
+    TH1F *etambarhist       = new TH1F("mbaretahist","mu+ #eta distribution",100,-4.,4.);
+    
+    TH1F *phibhist          = new TH1F("bphihist","b quark #phi distribution",100,-4.,4.);
+    TH1F *phibbarhist       = new TH1F("bbarphihist","bbar quark #phi distribution",100,-4.,4.);
+    
+    TH1F *phimhist          = new TH1F("mphihist","mu- #phi distribution",100,-4.,4.);
+    TH1F *phimbarhist       = new TH1F("mbarphihist","mu+ #phi distribution",100,-4.,4.);
+    
+    TH1F *pTHhist           = new TH1F("pTH","Higgs boson pT distribution",100,0.,300.);
+    TH1F *pTZhist           = new TH1F("pTZ","Z boson pT distribution",100,0.,300.);
+    TH1F *dpTHZhist         = new TH1F("dpTHZ","dpT between H and Z",100,-200,200.);
+    
+    TH1F *inv               = new TH1F("invm","Di-jet invariant mass distribution (after b bbar cut)",100,0.,250.);
+    
+    TH1F *pTbjethist        = new TH1F("pTbjethist","pT distribution of b-jet",100,0.,300.);
+    TH1F *pTbbarjethist     = new TH1F("pTbbarjethist","pT distribution of bbar-jet",100,0.,300.);
     
     
-    
-    
-    
+    int znumber = 0;
     
     for(int iEntry=0; iEntry<nEntry ;++iEntry)
     {
         //cout << "This is " << iEntry << " th event" << string(114,'=') << endl;
         
         //variable
-        Float_t pTZ,pTb,pTbbar;
+        Float_t pTZ,pTH,pTb,pTbbar,pTm,pTmbar;
         bool ZCheck = false;
         bool EtabCheck = false;
         bool pTbCheck = false;
@@ -126,18 +136,26 @@ void read28m(){
         tree->GetEntry(iEntry);
         
         //pT calcuation
-        pTZ = ptcalc(pxz,pyz);
-        pTb = ptcalc(pxb,pyb);
-        pTbbar = ptcalc(pxbbar,pybbar);
+        pTZ     = ptcalc(pxz,pyz);
+        pTH     = ptcalc(pxh,pyh);
+        pTb     = ptcalc(pxb,pyb);
+        pTbbar  = ptcalc(pxbbar,pybbar);
+        pTm     = ptcalc(pxm,pym);
+        pTmbar  = ptcalc(pxmbar,pymbar);
+        
         
         //Z, b, bbar cut
-        if(pTZ>250) ZCheck = true;
+        if(pTZ>50) ZCheck = true;
         if(abs(etab) <= 2.4 && abs(etabbar) <= 2.4) EtabCheck = true;
         if(pTb >= 20. && pTbbar >= 20.) pTbCheck = true;
         
         
         //if the event satisfy event...
         if(ZCheck == true && EtabCheck == true && pTbCheck == true){
+            
+            ++znumber;
+            
+            //Jet Analysis==============================================================================================================================================
             
             //Jet selection
             int tempp1=0,tempp2=0;
@@ -169,25 +187,49 @@ void read28m(){
             //number of b and bbar jet coincide
             if(tempp1 == tempp2) numberrm++;
             
-            //di-jet invariant mass calculation
+            //di-jet anlysis
             if(tempp1 != tempp2 && tempdR1 < 0.3 && tempdR2 < 0.3){
                 
                 invm = invariant(mjet[tempp1],mjet[tempp2],ejet[tempp1],ejet[tempp2],pxjet[tempp1],pxjet[tempp2],pyjet[tempp1],pyjet[tempp2],pzjet[tempp1],pzjet[tempp2]);
+                
+                Float_t pTbjet,pTbbarjet;
+                
+                pTbjet = ptcalc(pxjet[tempp1],pyjet[tempp1]);
+                pTbbarjet = ptcalc(pxjet[tempp2],pyjet[tempp2]);
+                
+                
+                pTbjethist->Fill(pTbjet);
+                pTbbarjethist->Fill(pTbbarjet);
                 
                 inv->Fill(invm);
                 
             }
             
             
+            //non Jet Analysis==========================================================================================================================================
             
+            pTHhist->Fill(pTH);
+            pTZhist->Fill(pTZ);
+            dpTHZhist->Fill(pTH - pTZ);
             
+            pTbhist->Fill(pTb);
+            pTbbarhist->Fill(pTbbar);
             
+            pTmhist->Fill(pTm);
+            pTmbarhist->Fill(pTmbar);
             
+            etabhist->Fill(etab);
+            etabbarhist->Fill(etabbar);
             
+            etamhist->Fill(etam);
+            etambarhist->Fill(etambar);
             
+            phibhist->Fill(phib);
+            phibbarhist->Fill(phibbar);
             
-            
-            
+            phimhist->Fill(phim);
+            phimbarhist->Fill(phimbar);
+
             
             
             
@@ -202,48 +244,14 @@ void read28m(){
             
         }//if Check
         
+        
+        //if(znumber == 10000) break;
+        
         //cout << endl;
         
     }//end iEntry
     
     cout << "number of jet coincide with b and bbar = " << numberrm << endl;
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
