@@ -16,6 +16,7 @@ void read28m(){
     Float_t dphibbar,detabbar,dRbbar;
     Float_t dphim,detam,dRm;
     Float_t dphimbar,detambar,dRmbar;
+    Float_t higgsinv,zinv;
     Float_t invm,numberrm = 0;
     Int_t nJet;
     
@@ -85,7 +86,9 @@ void read28m(){
     
     
     
-    
+    TCanvas *c1 = new TCanvas("c1","multipads",1000,500);
+    gStyle->SetOptStat(1);
+    c1->Divide(2,1,0.02,0.02);
     
     
     //Histogram
@@ -114,10 +117,25 @@ void read28m(){
     TH1F *pTZhist           = new TH1F("pTZ","Z boson pT distribution",100,0.,300.);
     TH1F *dpTHZhist         = new TH1F("dpTHZ","dpT between H and Z",100,-200,200.);
     
-    TH1F *inv               = new TH1F("invm","Di-jet invariant mass distribution (after b bbar cut)",100,0.,250.);
+    TH1F *inv               = new TH1F("invm","Di-jet invariant mass distribution",100,0.,250.);
     
     TH1F *pTbjethist        = new TH1F("pTbjethist","pT distribution of b-jet",100,0.,300.);
     TH1F *pTbbarjethist     = new TH1F("pTbbarjethist","pT distribution of bbar-jet",100,0.,300.);
+    
+    TH1F *pTZhist2          = new TH1F("pTZ2","Z boson pT distribution",100,0.,300.);
+    
+    TH1F *dRbhist           = new TH1F("dRbhist","dR distribution of b",100,0.,10.);
+    TH1F *dRbbarhist        = new TH1F("dRbbarhist","dR distribution of bbar",100,0.,10.);
+    
+    TH2F *etahist2d         = new TH2F("etahist2d","Eta bbar vs Eta b",100,-4.,4.,100,-4.,4.);
+    TLine *line1            = new TLine(-2.4,-2.4,2.4,-2.4);
+    TLine *line2            = new TLine(-2.4,2.4,2.4,2.4);
+    TLine *line3            = new TLine(-2.4,-2.4,-2.4,2.4);
+    TLine *line4            = new TLine(2.4,-2.4,2.4,2.4);
+    
+    TH2F *pThist2d          = new TH2F("pThist2d","pT bbar vs pT b",100,0.,300.,100,0.,300.);
+    TLine *line5            = new TLine(20.,20.,300.,20.);
+    TLine *line6            = new TLine(20.,20.,20.,300.);
     
     
     int znumber = 0;
@@ -135,6 +153,13 @@ void read28m(){
         //Obtain entry of one event
         tree->GetEntry(iEntry);
         
+        higgsinv = invariant(mb,mbbar,eb,ebbar,pxb,pxbbar,pyb,pybbar,pzb,pzbbar);
+        zinv = invariant(mm,mmbar,em,embar,pxm,pxmbar,pym,pymbar,pzm,pzmbar);
+        
+        higg->Fill(higgsinv);
+        zboson->Fill(zinv);
+        
+        
         //pT calcuation
         pTZ     = ptcalc(pxz,pyz);
         pTH     = ptcalc(pxh,pyh);
@@ -143,9 +168,10 @@ void read28m(){
         pTm     = ptcalc(pxm,pym);
         pTmbar  = ptcalc(pxmbar,pymbar);
         
+        pTZhist2->Fill(pTZ);
         
         //Z, b, bbar cut
-        if(pTZ>50) ZCheck = true;
+        if(pTZ>=0) ZCheck = true;
         if(abs(etab) <= 2.4 && abs(etabbar) <= 2.4) EtabCheck = true;
         if(pTb >= 20. && pTbbar >= 20.) pTbCheck = true;
         
@@ -170,6 +196,7 @@ void read28m(){
                 
                 //cout << "jet" << p << ", dRb = " << dRb << ", dRbbar = " << dRbbar << endl;
                 
+                
                 //take smallest dR between b and jet
                 if(dRb < tempdR1 && (dRm > 0.1 || dRmbar > 0.1)){
                     tempp1 = p;
@@ -183,6 +210,7 @@ void read28m(){
                 }
                 
             }//end Jet selection
+            
             
             //number of b and bbar jet coincide
             if(tempp1 == tempp2) numberrm++;
@@ -203,7 +231,9 @@ void read28m(){
                 
                 inv->Fill(invm);
                 
-            }
+                
+            }//end dijet analysis
+            
             
             
             //non Jet Analysis==========================================================================================================================================
@@ -229,21 +259,11 @@ void read28m(){
             
             phimhist->Fill(phim);
             phimbarhist->Fill(phimbar);
-
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             
         }//if Check
         
+        etahist2d->Fill(etab,etabbar);
+        pThist2d->Fill(pTb,pTbbar);
         
         //if(znumber == 10000) break;
         
@@ -253,6 +273,29 @@ void read28m(){
     
     cout << "number of jet coincide with b and bbar = " << numberrm << endl;
     
+    c1->cd(1);
+    etahist2d->Draw();
+    line1->SetLineColor(kRed);
+    line2->SetLineColor(kRed);
+    line3->SetLineColor(kRed);
+    line4->SetLineColor(kRed);
+    line1->SetLineWidth(3);
+    line2->SetLineWidth(3);
+    line3->SetLineWidth(3);
+    line4->SetLineWidth(3);
+    line1->Draw("same");
+    line2->Draw("same");
+    line3->Draw("same");
+    line4->Draw("same");
+    
+    c1->cd(2);
+    pThist2d->Draw();
+    line5->SetLineColor(kRed);
+    line6->SetLineColor(kRed);
+    line5->SetLineWidth(3);
+    line6->SetLineWidth(3);
+    line5->Draw("same");
+    line6->Draw("same");
     
     
     

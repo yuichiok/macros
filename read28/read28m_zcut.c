@@ -84,50 +84,32 @@ void read28m_zcut(){
     tree->SetBranchAddress("etajet",etajet);
     tree->SetBranchAddress("phijet",phijet);
     
-    
-    
-    
-    
-    
     //Histogram
-    TH1F *higg              = new TH1F("hm","Higgs invariant mass distribution",100,0,300.);
-    TH1F *zboson            = new TH1F("zm","Z0 invariant mass distribution",100,0,300.);
     
-    TH1F *pTbhist           = new TH1F("bpThist","b quark pT distribution",100,0,300.);
-    TH1F *pTbbarhist        = new TH1F("bbarpThist","bbar quark pT distribution",100,0,300.);
     
-    TH1F *pTmhist           = new TH1F("mpThist","mu- pT distribution",100,0,300.);
-    TH1F *pTmbarhist        = new TH1F("mbarpThist","mu+ pT distribution",100,0,300.);
     
-    TH1F *etabhist          = new TH1F("betahist","b quark #eta distribution",100,-4.,4.);
-    TH1F *etabbarhist       = new TH1F("bbaretahist","bbar quark #eta distribution",100,-4.,4.);
-    
-    TH1F *etamhist          = new TH1F("metahist","mu- #eta distribution",100,-4.,4.);
-    TH1F *etambarhist       = new TH1F("mbaretahist","mu+ #eta distribution",100,-4.,4.);
-    
-    TH1F *phibhist          = new TH1F("bphihist","b quark #phi distribution",100,-4.,4.);
-    TH1F *phibbarhist       = new TH1F("bbarphihist","bbar quark #phi distribution",100,-4.,4.);
-    
-    TH1F *phimhist          = new TH1F("mphihist","mu- #phi distribution",100,-4.,4.);
-    TH1F *phimbarhist       = new TH1F("mbarphihist","mu+ #phi distribution",100,-4.,4.);
-    
-    TH1F *pTHhist           = new TH1F("pTH","Higgs boson pT distribution",100,0.,300.);
-    TH1F *pTZhist           = new TH1F("pTZ","Z boson pT distribution",100,0.,300.);
-    TH1F *dpTHZhist         = new TH1F("dpTHZ","dpT between H and Z",100,-200,200.);
-    
-    TH1F *inv               = new TH1F("invm","Di-jet invariant mass distribution (after b bbar cut)",100,0.,250.);
-    
-    TH1F *pTbjethist        = new TH1F("pTbjethist","pT distribution of b-jet",100,0.,300.);
-    TH1F *pTbbarjethist     = new TH1F("pTbbarjethist","pT distribution of bbar-jet",100,0.,300.);
-    
-    int n = 20;
+    int n = 26;
+    double eff[n];
     double cross[n];
     double zcut[n];
     double sigz;
     
+    TH1F *inv[n];
+    char name[30];
+    char title[100];
+    
+    //analyze for different zcut
     for(int i=0; i<n ; i++){
         
-        Float_t numberrm = 0;
+        sprintf(name,"h%d",i*10);
+        sprintf(title,"Di-jet invariant mass distribution with ZpT cut %d GeV",i*10);
+        
+        inv[i] = new TH1F(name,title,100,0.,250.);
+        inv[i]->SetXTitle("inv mass [GeV]");
+        inv[i]->SetYTitle("Events");
+        
+        
+        
         int znumber = 0;
         double all_Event = 0,selected_Event = 0;
         
@@ -193,52 +175,18 @@ void read28m_zcut(){
                     
                 }//end Jet selection
                 
-                //number of b and bbar jet coincide
-                if(tempp1 == tempp2) numberrm++;
-                
                 //di-jet anlysis
                 if(tempp1 != tempp2 && tempdR1 < 0.3 && tempdR2 < 0.3){
                     
                     invm = invariant(mjet[tempp1],mjet[tempp2],ejet[tempp1],ejet[tempp2],pxjet[tempp1],pxjet[tempp2],pyjet[tempp1],pyjet[tempp2],pzjet[tempp1],pzjet[tempp2]);
                     
-                    Float_t pTbjet,pTbbarjet;
-                    
-                    pTbjet = ptcalc(pxjet[tempp1],pyjet[tempp1]);
-                    pTbbarjet = ptcalc(pxjet[tempp2],pyjet[tempp2]);
-                    
-                    
-                    pTbjethist->Fill(pTbjet);
-                    pTbbarjethist->Fill(pTbbarjet);
-                    
-                    inv->Fill(invm);
+                    inv[i]->Fill(invm);
                     
                     selected_Event++;
                 }
                 
                 
-                //non Jet Analysis==========================================================================================================================================
-                
-                pTHhist->Fill(pTH);
-                pTZhist->Fill(pTZ);
-                dpTHZhist->Fill(pTH - pTZ);
-                
-                pTbhist->Fill(pTb);
-                pTbbarhist->Fill(pTbbar);
-                
-                pTmhist->Fill(pTm);
-                pTmbarhist->Fill(pTmbar);
-                
-                etabhist->Fill(etab);
-                etabbarhist->Fill(etabbar);
-                
-                etamhist->Fill(etam);
-                etambarhist->Fill(etambar);
-                
-                phibhist->Fill(phib);
-                phibbarhist->Fill(phibbar);
-                
-                phimhist->Fill(phim);
-                phimbarhist->Fill(phimbar);
+                //non Jet Analysis=========================================================================================================================================
                 
                 all_Event++;
                 
@@ -251,21 +199,50 @@ void read28m_zcut(){
             
         }//end iEntry
         
-        cout << "number of jet coincide with b and bbar = " << numberrm << endl;
-        
         zcut[i] = i*10;
-                
-        cout << "analysis" << i << ": all = " << all_Event << ", selected = " << selected_Event << endl;
         
+        //cout << "analysis" << i << ": all = " << all_Event << ", selected = " << selected_Event << endl;
+        
+        //calculation of cross section
         sigz = cross_sec(11.67,all_Event,100000);
         
         cross[i] = cross_sec(sigz,selected_Event,all_Event);
         
-    }//cross section loop
+        //calculation of efficiency
+        eff[i] = selected_Event/all_Event;
+        
+        
+        
+        
+    }//end of i<n loop
     
+    TCanvas *c1 = new TCanvas("c1","multipads",1000,500);
+    gStyle->SetOptStat(1);
+    c1->Divide(2,1,0.02,0.02);
     
+    //graph cross section
+    c1->cd(1);
     TGraph *crossgraph = new TGraph(n,zcut,cross);
+    crossgraph->SetTitle("Cross section vs. ZpT cut");
+    crossgraph->GetXaxis()->SetTitle("ZpT cut [GeV]");
+    crossgraph->GetYaxis()->SetTitle("Cross Section [fb]");
+    crossgraph->GetXaxis()->SetRangeUser(-5.,255.);
+    crossgraph->SetLineWidth(2);
+    crossgraph->SetLineColor(2);
+    crossgraph->SetMarkerStyle(21);
     crossgraph->Draw();
+    
+    c1->cd(2);
+    TGraph *effgraph = new TGraph(n,zcut,eff);
+    effgraph->SetTitle("Jet reconstruction efficiency vs. ZpT cut");
+    effgraph->GetXaxis()->SetTitle("ZpT cut [GeV]");
+    effgraph->GetYaxis()->SetTitle("Efficiency");
+    effgraph->GetXaxis()->SetRangeUser(-5.,255.);
+    effgraph->GetYaxis()->SetRangeUser(0.,1.1);
+    effgraph->SetLineWidth(2);
+    effgraph->SetLineColor(2);
+    effgraph->SetMarkerStyle(21);
+    effgraph->Draw();
     
     
     
