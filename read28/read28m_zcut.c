@@ -88,7 +88,7 @@ void read28m_zcut(){
     
     
     
-    int n = 26;
+    int n = 55;
     double eff[n];
     double cross[n];
     double zcut[n];
@@ -193,8 +193,6 @@ void read28m_zcut(){
                 
             }//if Check
             
-            //if(znumber == 1000) break;
-            
             //cout << endl;
             
         }//end iEntry
@@ -224,9 +222,9 @@ void read28m_zcut(){
     c1->cd(1);
     TGraph *crossgraph = new TGraph(n,zcut,cross);
     crossgraph->SetTitle("Cross section vs. ZpT cut");
-    crossgraph->GetXaxis()->SetTitle("ZpT cut [GeV]");
+    crossgraph->GetXaxis()->SetTitle("Z pT [GeV]");
     crossgraph->GetYaxis()->SetTitle("Cross Section [fb]");
-    crossgraph->GetXaxis()->SetRangeUser(-5.,255.);
+    crossgraph->GetXaxis()->SetRangeUser(-5.,555.);
     crossgraph->SetLineWidth(2);
     crossgraph->SetLineColor(2);
     crossgraph->SetMarkerStyle(21);
@@ -235,9 +233,9 @@ void read28m_zcut(){
     c1->cd(2);
     TGraph *effgraph = new TGraph(n,zcut,eff);
     effgraph->SetTitle("Jet reconstruction efficiency vs. ZpT cut");
-    effgraph->GetXaxis()->SetTitle("ZpT cut [GeV]");
+    effgraph->GetXaxis()->SetTitle("Z pT [GeV]");
     effgraph->GetYaxis()->SetTitle("Efficiency");
-    effgraph->GetXaxis()->SetRangeUser(-5.,255.);
+    effgraph->GetXaxis()->SetRangeUser(-5.,555.);
     effgraph->GetYaxis()->SetRangeUser(0.,1.1);
     effgraph->SetLineWidth(2);
     effgraph->SetLineColor(2);
