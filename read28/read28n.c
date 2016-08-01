@@ -3,8 +3,8 @@ int count();
 void read28n() {
     ifstream ina;
     ifstream inb;
-    ina.open("/Users/Yuichi/root/macros/mytext28/mytext28a.txt");
-    inb.open("/Users/Yuichi/root/macros/mytext28/mytext28b.txt");    //Check
+    ina.open("/Users/Yuichi/root/macros/mytext28/mytext28a2.txt");
+    inb.open("/Users/Yuichi/root/macros/mytext28/mytext28b2.txt");    //Check
     
     //Variables
     Float_t pxb,pyb,pzb,eb,mb,etab,phib;
@@ -108,7 +108,7 @@ int count(){
     
     int number_of_lines = 0;
     std::string line;
-    std::ifstream myfile("/Users/Yuichi/root/macros/mytext28/mytext28b.txt");
+    std::ifstream myfile("/Users/Yuichi/root/macros/mytext28/mytext28b2.txt");
     
     while (std::getline(myfile, line))
         ++number_of_lines;
